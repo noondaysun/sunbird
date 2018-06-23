@@ -1,0 +1,15 @@
+version: "2.3"
+
+services:
+
+### PHP-FPM Container #######################################
+
+  php-fpm:
+    container_name: php-fpm
+    hostname: php-fpm
+    image: php:7.2-alpine
+    ports:
+      - "9000:9000"
+    restart: on-failure:5
+    volumes:
+      - ./:/var/www/html

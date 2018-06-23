@@ -1,0 +1,7 @@
+/.buildpath
+/.project
+/.settings/
+!/build/phpcs.xml
+!/build/phpmd.xml
+/build/*
+/vendor

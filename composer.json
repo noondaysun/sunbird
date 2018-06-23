@@ -1,0 +1,34 @@
+{
+    "autoload": {
+       "classmap": [
+           "src/"
+       ],
+       "psr-4": {
+           "Sunbird\\": "src/"
+       }
+    },
+    "name": "noondaysun/sunbird",
+    "description": "A package that allows shows a sunbird feeding from flowers during the day",
+    "type": "package",
+    "license": "Eclipse Public License - v 2.0",
+    "authors": [
+        {
+            "name": "Feighen Oosterbroek",
+            "email": "feighen.oosterbroek@cashrewards.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "pdepend/pdepend": "^2.5",
+        "phploc/phploc": "^4.0",
+        "phpmd/phpmd": "^2.6",
+        "phpstan/phpstan": "^0.8.5",
+        "phpunit/phpunit": "~6.0",
+        "sebastian/phpcpd": "^3.0",
+        "squizlabs/php_codesniffer": "^3.3",
+        "theseer/phpdox": "^0.11.2"
+    },
+    "require": {
+
+    }
+}
