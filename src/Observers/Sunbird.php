@@ -8,19 +8,15 @@ class Sunbird implements \SplObserver
      * @var  string
      */
     protected $name;
-
-    /**
-     * @var int
-     */
-    protected $priority = 0;
     
     /**
-     * Accepts observer name and priority, default to zero
+     * Accepts observer name
+     *
+     * @param string $name
      */
-    public function __construct($name, $priority = 0)
+    public function __construct(string $name)
     {
         $this->name = $name;
-        $this->priority = $priority;
     }
     
     /**
@@ -35,14 +31,5 @@ class Sunbird implements \SplObserver
         
         print_r($this->name.': '. $publisher->getEvent(). PHP_EOL);
         
-    }
-    
-    /**
-     * Get observer priority
-     *
-     * @return int
-     */
-    public  function getPriority(){
-        return $this->priority;
     }
 }

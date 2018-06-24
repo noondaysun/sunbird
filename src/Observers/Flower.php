@@ -5,22 +5,40 @@ namespace Sunbird\Observers;
 class Flower implements \SplObserver
 {
     /**
+     * How many flowers are there in total
+     *
+     * @var integer
+     */
+    const FLOWERS = 10;
+    
+    /**
+     * How many times can a single flower be fed upon
+     *
+     * @var integer
+     */
+    const FEEDAMOUNT = 10;
+    
+    /**
+     * List each flowers available feed
+     *
+     * @var array
+     */
+    protected $flowerFeedAmount = [];
+    
+    /**
      * @var  string
      */
     protected $name;
 
     /**
-     * @var int
+     * Accepts observer name
+     *
+     * @param string $name
      */
-    protected $priority = 0;
-    
-    /**
-     * Accepts observer name and priority, default to zero
-     */
-    public function __construct($name, $priority = 0)
+    public function __construct(string $name)
     {
         $this->name = $name;
-        $this->priority = $priority;
+        $this->setUpFlowerFeedAmounts();
     }
     
     /**
@@ -31,18 +49,35 @@ class Flower implements \SplObserver
      * @param \SplSubject $publisher
      * @return void
      */
-    public function update(\SplSubject $publisher){
-        
-        print_r($this->name.': '. $publisher->getEvent(). PHP_EOL);
-        
+    public function update(\SplSubject $publisher)
+    {
+        $flower = random_int(0, self::FLOWERS);
+        var_dump(flower);
     }
     
     /**
-     * Get observer priority
+     * How much total feed do we have left
      *
      * @return int
      */
-    public  function getPriority(){
-        return $this->priority;
+    public function getFlowerFeedAmountRemaining(): int
+    {
+        return array_sum($this->flowerFeedAmount);
+    }
+    
+    /**
+     * Initial setup of feed amounts per flower
+     *
+     * @return bool
+     */
+    private function setUpFlowerFeedAmounts(): bool
+    {
+        if (!empty($this->flowerFeedAmount)) {
+            return false;
+        }
+        for ($i=0; $i<10; $i++) {
+            $this->flowerFeedAmount[$i] = self::FEEDAMOUNT;
+        }
+        return true;
     }
 }

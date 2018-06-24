@@ -28,6 +28,13 @@ class Sun implements \SplSubject
     protected $event;
     
     /**
+     * What is the current hour
+     *
+     * @var integer
+     */
+    protected $hour = 0;
+    
+    /**
      * Linked list of observers
      *
      * @var array
@@ -68,8 +75,6 @@ class Sun implements \SplSubject
     {
         $observerKey = spl_object_hash($observer);
         $this->observers[$observerKey] = $observer;
-        $this->linkedList[$observerKey] = $observer->getPriority();
-        arsort($this->linkedList);
     }
     
     /**
@@ -97,33 +102,37 @@ class Sun implements \SplSubject
     }
     
     /**
-     * Set or update event
+     * Fire when the day ends hour 23
      *
-     * @param $event
      * @return void
      */
-    public function setEvent($event)
+    public function onDayEnd()
     {
-        $this->event = $event;
+        $this->event = 'Day Ended';
+        $this->hour = 0;
         $this->notify();
     }
     
     /**
-     * @return string
+     * Fire when the day starts hour 00
+     *
+     * @return void
      */
-    public function getEvent()
+    public function onDayStart()
     {
-        return $this->event;
+        $this->event = 'Day Started';
+        $this->notify();
     }
     
     /**
-     * Check to see if the current hour is during the day, or not
-     *
-     * @param int $hour
-     * @return bool
+     * Fire each time the hour changes
+     * 
+     * @return void
      */
-    public function checkHourDuringDaylightHours(int $hour): bool
+    public function onHourChange()
     {
-        return in_array($hour, self::DAY);
+        $this->event = 'Hour Changed';
+        $this->hour++;
+        $this->notify();
     }
 }
