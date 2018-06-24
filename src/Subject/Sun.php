@@ -73,8 +73,6 @@ class Sun
         $this->fireLikeEventInObserver();
         $this->day++;
         $this->hour = 0;
-        
-        echo $this->event . '(' . $this->day . ')' . PHP_EOL;
         $this->onDayStart();
     }
     

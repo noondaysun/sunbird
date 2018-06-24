@@ -7,6 +7,12 @@ use Sunbird\Subject\Sun;
 class Sunbird
 {
     /**
+     * 
+     * @var integer
+     */
+    protected $count = 0;
+    
+    /**
      * Daylight hours
      * @var array
      */
@@ -36,7 +42,7 @@ class Sunbird
      */
     public function onDayEnd(Sun $sun)
     {
-        
+        $this->count = 0;
     }
     
     /**
@@ -57,8 +63,11 @@ class Sunbird
     public function onHourChange(Sun $sun)
     {
         $this->event = 'Hour Changed';
-        echo 'Hour: ' . $sun->getHour() . PHP_EOL;
         if (!$this->testIfHourDuringDay($sun->getHour())) {
+            if ($this->count === 0) {
+                echo 'Day End (' . $sun->getDay() . ')' . PHP_EOL;
+                $this->count++;
+            }
             echo 'Sleep' . PHP_EOL;
         }
     }
