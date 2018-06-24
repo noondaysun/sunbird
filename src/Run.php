@@ -7,14 +7,12 @@ require_once __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'vendo
 use Sunbird\Subject\Sun;
 use Sunbird\Observers\{Flower, Sunbird};
 
-$flower = new Flower('The Flowers', 20);
-$sunbird = new Sunbird('The Sunbird', 10);
+// The subject
 $sun = new Sun('Day');
+// It's observers
+$flower = new Flower('The Flowers');
 
 $sun->attach($flower);
-$sun->attach($sunbird);
+$sun->attach(new Sunbird('The Sunbird'));
 
-for ($i=0; $i<$flower->getFlowerFeedAmountRemaining(); $i++) {
-    $sun->onDayStart();
-    $sun->onHourChange();
-}
+$sun->onDayStart();

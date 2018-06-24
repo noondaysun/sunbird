@@ -2,44 +2,18 @@
 declare(strict_types=1);
 namespace Sunbird\Subject;
 
-class Sun implements \SplSubject
+use Sunbird\Traits\TimeTrait;
+
+class Sun
 {
-    /**
-     * Daylight hours
-     * @var array
-     */
-    const DAY = [
-        7,8,9,10,11,12,13,14,15,16,17,18
-    ];
-    
-    /**
-     * Night hours
-     * @var array
-     */
-    const NIGHT = [
-        19,20,21,22,23,0,1,2,3,4,5,6
-    ];
-    
+    use TimeTrait;
+
     /**
      * Which event fired?
      *
      * @param string
      */
     protected $event;
-    
-    /**
-     * What is the current hour
-     *
-     * @var integer
-     */
-    protected $hour = 0;
-    
-    /**
-     * Linked list of observers
-     *
-     * @var array
-     */
-    protected $linkedList = array();
     
     /**
      * Name of our subject
@@ -69,9 +43,9 @@ class Sun implements \SplSubject
     /**
      * Attach an observer
      *
-     * @param \SplObserver $observer
+     * @param object $observer
      */
-    public function attach(\SplObserver $observer)
+    public function attach(object $observer)
     {
         $observerKey = spl_object_hash($observer);
         $this->observers[$observerKey] = $observer;
@@ -80,25 +54,12 @@ class Sun implements \SplSubject
     /**
      * Detach an observer
      * 
-     * @param \SplObserver $observer
+     * @param object $observer
      */
-    public function detach(\SplObserver $observer)
+    public function detach(object $observer)
     {
         $observerKey = spl_object_hash($observer);
         unset($this->observers[$observerKey]);
-        unset($this->linkedList[$observerKey]);
-    }
-    
-    /**
-     * Notify all observers of a change
-     *
-     * @return void 
-     */
-    public function notify()
-    {
-        foreach ($this->linkedList as $key => $value) {
-            $this->observers[$key]->update($this);
-        }
     }
     
     /**
@@ -109,8 +70,12 @@ class Sun implements \SplSubject
     public function onDayEnd()
     {
         $this->event = 'Day Ended';
+        $this->fireLikeEventInObserver();
+        $this->day++;
         $this->hour = 0;
-        $this->notify();
+        
+        echo $this->event . '(' . $this->day . ')' . PHP_EOL;
+        $this->onDayStart();
     }
     
     /**
@@ -121,7 +86,15 @@ class Sun implements \SplSubject
     public function onDayStart()
     {
         $this->event = 'Day Started';
-        $this->notify();
+        $this->fireLikeEventInObserver();
+        echo $this->event . ' (' . $this->day . ')' . PHP_EOL;
+        
+        for ($i=0; $i<=23; $i++) {
+            $this->onHourChange($i);
+            if ($i === 23) {
+                $this->onDayEnd();
+            }
+        }
     }
     
     /**
@@ -129,10 +102,24 @@ class Sun implements \SplSubject
      * 
      * @return void
      */
-    public function onHourChange()
+    public function onHourChange(int $hour)
     {
         $this->event = 'Hour Changed';
+        echo $this->event . ' (' . $this->hour . ')' . PHP_EOL;
+        $this->fireLikeEventInObserver();
         $this->hour++;
-        $this->notify();
+    }
+    
+    /**
+     * Call the corresponding function in all observers
+     *
+     * @return void
+     */
+    protected function fireLikeEventInObserver()
+    {
+        $callingFunction = debug_backtrace()[1]['function'];
+        foreach ($this->observers as $observer) {
+            $observer->$callingFunction($this);
+        }
     }
 }

@@ -2,7 +2,9 @@
 declare(strict_types=1);
 namespace Sunbird\Observers;
 
-class Flower implements \SplObserver
+use Sunbird\Subject\Sun;
+
+class Flower
 {
     /**
      * How many flowers are there in total
@@ -17,6 +19,14 @@ class Flower implements \SplObserver
      * @var integer
      */
     const FEEDAMOUNT = 10;
+    
+    /**
+     * Daylight hours
+     * @var array
+     */
+    protected $dayHours = [
+        0,1,2,3,4,5,6,7,8,9,10,11
+    ];
     
     /**
      * List each flowers available feed
@@ -42,27 +52,45 @@ class Flower implements \SplObserver
     }
     
     /**
-     * Receive update from subject and print result
+     * Fire when the day ends hour 23
      *
-     * {@inheritDoc}
-     * @see \SplObserver::update()
-     * @param \SplSubject $publisher
      * @return void
      */
-    public function update(\SplSubject $publisher)
+    public function onDayEnd(Sun $sun)
     {
-        $flower = random_int(0, self::FLOWERS);
-        var_dump(flower);
+        $this->event = 'Day Ended';
     }
     
     /**
-     * How much total feed do we have left
+     * Fire when the day starts hour 00
      *
-     * @return int
+     * @return void
      */
-    public function getFlowerFeedAmountRemaining(): int
+    public function onDayStart(Sun $sun)
     {
-        return array_sum($this->flowerFeedAmount);
+        $this->event = 'Day Started';
+        
+    }
+    
+    /**
+     * Fire each time the hour changes
+     *
+     * @return void
+     */
+    public function onHourChange(Sun $sun)
+    {
+        
+    }
+    
+    /**
+     * Should we be feeding the sunbirds
+     *
+     * @param int $hour
+     * @return bool
+     */
+    private function testIfHourDuringDay(int $hour): bool
+    {
+        return in_array($hour, $this->dayHours);
     }
     
     /**
